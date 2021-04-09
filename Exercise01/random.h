@@ -17,10 +17,9 @@ class Random {
 
 private:
   int m1,m2,m3,m4,l1,l2,l3,l4,n1,n2,n3,n4;
-  //added by Stefano Bigoni
+  //added by Stefano Bigoni:
   int seed[4];
   int p1,p2;
-
 protected:
 
 public:
@@ -34,7 +33,7 @@ public:
   double Rannyu(void);
   double Rannyu(double min, double max);
   double Gauss(double mean, double sigma);
-  //added by Stefano Bigoni
+  //added by Stefano Bigoni:
   double Exp(double lambda);
   double CauchyLorentz(double mu, double gamma);
   void LoadSeed(std::string,std::string);

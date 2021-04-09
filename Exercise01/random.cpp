@@ -79,8 +79,18 @@ void Random :: SetRandom(int * s, int p1, int p2){
   return;
 }
 
-//added by Stefano Bigoni
-void Random :: LoadSeed(string nprimes, string nseedin){
+/****************************************************************
+*****************************************************************
+    _/    _/  _/_/_/  _/       Numerical Simulation Laboratory
+   _/_/  _/ _/       _/       Physics Department
+  _/  _/_/    _/    _/       Universita' degli Studi di Milano
+ _/    _/       _/ _/       Prof. D.E. Galli
+_/    _/  _/_/_/  _/_/_/_/ email: Davide.Galli@unimi.it
+*****************************************************************
+*****************************************************************/
+
+////////////////// added by Stefano Bigoni /////////////////////
+void Random::LoadSeed(string nprimes, string nseedin){
     int seed[4];
     int p1,p2;
 
@@ -106,8 +116,7 @@ void Random :: LoadSeed(string nprimes, string nseedin){
         }
     }
     else
-        cerr << "ERROR: Unable to open seed.in" << endl;
-
+        cerr << "ERROR: Unable to open input seed" << endl;
 }
 
 
@@ -118,15 +127,3 @@ double Random::Exp(double lambda){
 double Random::CauchyLorentz(double mu, double gamma){
     return gamma*tan(M_PI*(Rannyu()-0.5))+mu;
 }
-
-
-
-/****************************************************************
-*****************************************************************
-    _/    _/  _/_/_/  _/       Numerical Simulation Laboratory
-   _/_/  _/ _/       _/       Physics Department
-  _/  _/_/    _/    _/       Universita' degli Studi di Milano
- _/    _/       _/ _/       Prof. D.E. Galli
-_/    _/  _/_/_/  _/_/_/_/ email: Davide.Galli@unimi.it
-*****************************************************************
-*****************************************************************/

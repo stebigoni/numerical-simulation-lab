@@ -1,7 +1,7 @@
-/********************************
+/*******************************************
 		NSL - EXERCISE 1
 		Stefano Bigoni
-********************************/
+*******************************************/
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -21,56 +21,96 @@ int main (int argc, char *argv[]){
 	Random rnd;
 	rnd.LoadSeed("Primes","seed.in");//Setting up the generator
 
-	int M = 100000; 	//number of steps
+	int M = 1000000; 	//number of steps
 	int N = 100;		//number of blocks
-	double r[M];		//random numbers array
+	double *r = new double[M]; //random numbers array
+		//Check for correct allocation
+		if (!r){ 
+			cout<<"ALLOCATION ERROR"<<endl;
+			exit(1);
+		}
+	
+	//Constructing the blocking scheme
+	Blocking blk(M,N); 	
 
-	Blocking blk(M,N); 	//Constructing the blocking scheme
-
-	//generating numbers
+	//Generating the M pseudo-random numbers
 	for (int i=0; i<M; i++){
 		r[i] = rnd.Rannyu();
 	}
 
-	//estimation of <r>
+	//Estimation of <r>
 	blk.CAvgs(r);
-	blk.Errs();
+	blk.CErrs();
 	blk.Output("output.dat");
 
-	//estimation of <sigma^2>
-	double sigma2[M];
+	//calculating square errors
+	double *sigma2 = new double[M];
+		//Check for correct allocation
+		if (!sigma2){ 
+			cout<<"ALLOCATION ERROR"<<endl;
+			exit(1);
+		}
 	for(int i=0;i<M;i++){
 		sigma2[i] = pow(r[i]-0.5,2);
 	}
-	blk.CAvgs(sigma2);
-	blk.Errs();
+
+	//estimation of <sigma^2>
+	blk.CAvgs(r);
+	blk.CErrs();
 	blk.Output("output2.dat");
 
-	//chisquare test
-	//int m = 100; //number of bin
-
-
-	//Blocking chisquare(n,)
-	/*
-	double chi2[K];
-	for(int i=0;i<K;i++){
-		for(int j=0;j<n/K;i++){
-			int k = j+i*n/K;
-
+	//__________chisquare test____________
+	{ 
+	//scope opened for re-using variable names
+		
+		int m = 100; // # of bins
+		int n[m]; // # of events in each bin
+		int K = 100; // # of chi-squared values
+		double chi2[100]; // array of chi-squared values
+		int E = M/K/m; // expected value of successes for each bin (uniform distribution)
+		
+		for(int j=0; j<100; j++){
+			// initializing the bins
+			for(int i=0; i<m; i++) n[i]=0; 
+			//histogram counting (M/K values at a time)
+			for(int i=j*M/K;i<(j+1)*M/K;i++){
+				int k = r[i]*100;
+				n[k]++;
+			}
+			//chi square calculation
+			chi2[j] = 0;
+			for(int i=0;i<m;i++){ //sum
+				chi2[j] += pow(n[i]-E,2);
+			}
+			chi2[j]/= E;
 		}
-		chi2[i] /=(n/K);
-	}*/
-
-
+		printfile(chi2,100,"chi2.dat");
+	}
+	
 	/************************ Exercise 01.2*************************/
-	//setting up the experiment
+	
 	int K = 10000;	//# of measurements
-	int n = 4;		//# of different experiments
+	int n = 4;	//# of different experiments
 
 	//arrays containing the mean values
 	double *mu = new double[K*4];
+		//Check for correct allocation
+		if (!mu){ 
+			cout<<"ALLOCATION ERROR"<<endl;
+			exit(1);
+		}
 	double *me = new double[K*4];
+		//Check for correct allocation
+		if (!me){ 
+			cout<<"ALLOCATION ERROR"<<endl;
+			exit(1);
+		}
 	double *ml = new double[K*4];
+		//Check for correct allocation
+		if (!ml){ 
+			cout<<"ALLOCATION ERROR"<<endl;
+			exit(1);
+		}
 
 	int Nd[n] = {1,2,10,100}; //#s of throws
 
@@ -91,18 +131,10 @@ int main (int argc, char *argv[]){
 			ml[i*n+j]/=double(Nd[j]);
 		}
 	}
-
-
-	Blocking blkdice(K,1);
-
-
-
 	//output
 	printfile(mu,K,n,"dice_unif.dat");
 	printfile(me,K,n,"dice_exp.dat");
 	printfile(ml,K,n,"dice_lor.dat");
-
-
 
 	/************************ Exercise 01.3*************************/
 
@@ -112,7 +144,13 @@ int main (int argc, char *argv[]){
 
 
 	/*********** Final actions **************/
-
+	
+	delete[] r;
+	delete[] sigma2;
+	delete[] mu;
+	delete[] me;
+	delete[] ml;
+	
 	rnd.SaveSeed(); //saving seed
 
 	return 0;
@@ -132,5 +170,5 @@ void printfile(double *data, int Nrows, int Ncols, string fname){
 }
 
 void printfile(double *data, int N, string fname){
-	printfile(data,N,0,fname);
+	printfile(data,N,1,fname);
 }

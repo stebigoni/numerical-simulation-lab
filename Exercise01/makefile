@@ -8,4 +8,4 @@ main.o : main.cpp
 %.o : %.cpp %.h
 	$(CC) -c $< -o $@ $(CFLAGS)
 clean :
-	rm *.o main seed.out
+	rm *.o *.dat main seed.out
