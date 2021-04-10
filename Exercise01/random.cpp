@@ -66,11 +66,10 @@ void Random :: SetRandom(int * s, int p1, int p2){
   m2 = 1521;
   m3 = 4071;
   m4 = 2107;
-  l1 = s[0]%4096;
-  l2 = s[1]%4096;
-  l3 = s[2]%4096;
-  l4 = s[3]%4096;
-  l4 = 2*(l4/2)+1;
+  l1 = s[0];
+  l2 = s[1];
+  l3 = s[2];
+  l4 = s[3];
   n1 = 0;
   n2 = 0;
   n3 = p1;
@@ -127,3 +126,13 @@ double Random::Exp(double lambda){
 double Random::CauchyLorentz(double mu, double gamma){
     return gamma*tan(M_PI*(Rannyu()-0.5))+mu;
 }
+
+double Random::Circ(){
+	return sqrt(1-pow(1-Rannyu(),2));
+}
+
+
+
+
+
+

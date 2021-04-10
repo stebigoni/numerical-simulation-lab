@@ -24,7 +24,7 @@ int main (int argc, char *argv[]){
 	int M = 1000000; 	//number of steps
 	int N = 100;		//number of blocks
 	double *r = new double[M]; //random numbers array
-		//Check for correct allocation
+		//Check for correct allocation (large numbers)
 		if (!r){ 
 			cout<<"ALLOCATION ERROR"<<endl;
 			exit(1);
@@ -59,34 +59,17 @@ int main (int argc, char *argv[]){
 	blk.CErrs();
 	blk.Output("output2.dat");
 
-	//__________chisquare test____________
-	{ 
-	//scope opened for re-using variable names
-		
-		int m = 100; // # of bins
-		int n[m]; // # of events in each bin
-		int K = 100; // # of chi-squared values
-		double chi2[100]; // array of chi-squared values
-		int E = M/K/m; // expected value of successes for each bin (uniform distribution)
-		
-		for(int j=0; j<100; j++){
-			// initializing the bins
-			for(int i=0; i<m; i++) n[i]=0; 
-			//histogram counting (M/K values at a time)
-			for(int i=j*M/K;i<(j+1)*M/K;i++){
-				int k = r[i]*100;
-				n[k]++;
-			}
-			//chi square calculation
-			chi2[j] = 0;
-			for(int i=0;i<m;i++){ //sum
-				chi2[j] += pow(n[i]-E,2);
-			}
-			chi2[j]/= E;
+	//estimation of chi squared
+	double *chi2 = new double[N];
+		if(!chi2){
+			cout<<"ALLOCATION ERROR"<<endl;
+			exit(1);
 		}
-		printfile(chi2,100,"chi2.dat");
-	}
-	
+	int m = 100; // # of bins
+	chi2 = blk.ChiSq(r,m);
+	printfile(chi2,m,"chi2.dat");
+		
+
 	/************************ Exercise 01.2*************************/
 	
 	int K = 10000;	//# of measurements
@@ -94,20 +77,10 @@ int main (int argc, char *argv[]){
 
 	//arrays containing the mean values
 	double *mu = new double[K*4];
-		//Check for correct allocation
-		if (!mu){ 
-			cout<<"ALLOCATION ERROR"<<endl;
-			exit(1);
-		}
 	double *me = new double[K*4];
-		//Check for correct allocation
-		if (!me){ 
-			cout<<"ALLOCATION ERROR"<<endl;
-			exit(1);
-		}
 	double *ml = new double[K*4];
 		//Check for correct allocation
-		if (!ml){ 
+		if (!ml||!me||!ml){ 
 			cout<<"ALLOCATION ERROR"<<endl;
 			exit(1);
 		}
@@ -119,8 +92,6 @@ int main (int argc, char *argv[]){
 			mu[i*4+j]=0;	//initialization
 			me[i*4+j]=0;
 			ml[i*4+j]=0;
-		}
-		for(int j=0;j<n;j++){
 			for(int k=0;k<Nd[j];k++){
 				mu[i*n+j]+=rnd.Rannyu();
 				me[i*n+j]+=rnd.Exp(1);
@@ -136,11 +107,16 @@ int main (int argc, char *argv[]){
 	printfile(me,K,n,"dice_exp.dat");
 	printfile(ml,K,n,"dice_lor.dat");
 
+	
 	/************************ Exercise 01.3*************************/
+	int xui=10000;
+	double *y = new double[xui];
+	for(int i=0;i<xui;i++){
+		if (i%2==0) y[i] = rnd.Rannyu();
+		else y[i] = rnd.Circ();
+	}
 
-
-
-
+	printfile(y,xui,"circ.dat");
 
 
 	/*********** Final actions **************/

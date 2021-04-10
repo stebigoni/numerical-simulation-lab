@@ -76,8 +76,32 @@ void Blocking::CErrs(){
 }
 
 
-double *Blocking::ChiSq(double *r, int m){
+double *Blocking::ChiSq(double r[], int m){
+	int n[m]; // # of events in each bin
+	double *chi2 = new double[_N]; // array of chi-squared values
+		if(!chi2){
+			cout<<"ALLOCATION ERROR";
+			exit(1);
+		}
+	int E = _L/m; // expected value of successes for each bin (uniform distribution)
 	
+	for(int j=0; j<100; j++){
+		// initializing the bins
+		for(int i=0; i<m; i++) n[i]=0; 
+		//histogram counting (L values at a time)
+		for(int i=j*_L;i<(j+1)*_L;i++){
+			int k = r[i]*100;
+			n[k]++;
+		}
+		//chi square calculation
+		chi2[j] = 0;
+		for(int i=0;i<m;i++){ //sum
+			chi2[j] += pow(n[i]-E,2);
+		}
+		chi2[j]/= E;
+	}
+
+	return chi2;
 }
 
 

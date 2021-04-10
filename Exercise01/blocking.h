@@ -20,7 +20,7 @@ using namespace std;
 			void CAvgs(double*);	//calculates single then cumulative block averages of input
 			void CErrs();		//calculates cumulative errors of Avgs result (after CAvgs has been used)
 			
-			double *ChiSq(double*,int)	//calculates the chi squared (uniform distribution in [0,1], given # of bins) for each block
+			double *ChiSq(double*,int);	//calculates the chi squared (uniform distribution in [0,1], given # of bins) for each block
 			
 			double *GetAvgs();
 			double *GetCAvgs();

@@ -33,10 +33,12 @@ public:
   double Rannyu(void);
   double Rannyu(double min, double max);
   double Gauss(double mean, double sigma);
+  
   //added by Stefano Bigoni:
+  void LoadSeed(std::string,std::string);
   double Exp(double lambda);
   double CauchyLorentz(double mu, double gamma);
-  void LoadSeed(std::string,std::string);
+  double Circ();
 };
 
 #endif // __Random__
