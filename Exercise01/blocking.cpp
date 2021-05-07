@@ -23,15 +23,7 @@ Blocking::~Blocking(){
 void Blocking::Avgs(double r[]){
     //computes block means and square means
     m   = new double[_N];
-    	if(!m){
-    		cout<<"ALLOCATION ERROR"<<endl;
-    		exit(1);
-    	}
     m2  = new double[_N];
-    	if(!m2){
-    		cout<<"ALLOCATION ERROR"<<endl;
-    		exit(1);
-    	}
     for(i=0;i<_N;i++){
         sum=0;
         for(j=0;j<_L;j++){
@@ -46,10 +38,6 @@ void Blocking::Avgs(double r[]){
 void Blocking::CAvgs(double r[]){
 	this->Avgs(r);
     	cm  = new double[_N];
-      	if(!m){
-    		cout<<"ALLOCATION ERROR"<<endl;
-    		exit(1);
-    	}
 	cm2 = new double[_N];
 	for(i=0;i<_N;i++){
 	  cm[i]=0;
@@ -70,7 +58,7 @@ void Blocking::CErrs(){
       err = new double[_N];
       err[0] = 0;
       for(i=1;i<_N;i++) {
-          err[i] = sqrt( (cm2[i]-pow(cm[i],2))/i );
+          err[i] = sqrt( (cm2[i]-pow(cm[i],2)) / i );
       }
     }
 }

@@ -38,6 +38,7 @@ public:
   void LoadSeed(std::string,std::string);
   double Exp(double lambda);
   double CauchyLorentz(double mu, double gamma);
+  int Coin();
   double Circ();
 };
 

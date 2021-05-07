@@ -127,8 +127,18 @@ double Random::CauchyLorentz(double mu, double gamma){
     return gamma*tan(M_PI*(Rannyu()-0.5))+mu;
 }
 
+int Random::Coin(){
+	double x = Rannyu();
+	if (x>0.5) return 1;
+	else  return -1;
+}
+
 double Random::Circ(){
-	return sqrt(1-pow(1-Rannyu(),2));
+	double y = Rannyu();
+	if (Rannyu()>0.48) return 2*y-1;
+	else return Coin()*sqrt(2*y-y*y); 
+		//the sign is random too, 
+		//so to pick square-roots of both signs
 }
 
 

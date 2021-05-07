@@ -24,11 +24,6 @@ int main (int argc, char *argv[]){
 	int M = 1000000; 	//number of steps
 	int N = 100;		//number of blocks
 	double *r = new double[M]; //random numbers array
-		//Check for correct allocation (large numbers)
-		if (!r){ 
-			cout<<"ALLOCATION ERROR"<<endl;
-			exit(1);
-		}
 	
 	//Constructing the blocking scheme
 	Blocking blk(M,N); 	
@@ -45,11 +40,6 @@ int main (int argc, char *argv[]){
 
 	//calculating square errors
 	double *sigma2 = new double[M];
-		//Check for correct allocation
-		if (!sigma2){ 
-			cout<<"ALLOCATION ERROR"<<endl;
-			exit(1);
-		}
 	for(int i=0;i<M;i++){
 		sigma2[i] = pow(r[i]-0.5,2);
 	}
@@ -61,10 +51,6 @@ int main (int argc, char *argv[]){
 
 	//estimation of chi squared
 	double *chi2 = new double[N];
-		if(!chi2){
-			cout<<"ALLOCATION ERROR"<<endl;
-			exit(1);
-		}
 	int m = 100; // # of bins
 	chi2 = blk.ChiSq(r,m);
 	printfile(chi2,m,"chi2.dat");
@@ -79,11 +65,6 @@ int main (int argc, char *argv[]){
 	double *mu = new double[K*4];
 	double *me = new double[K*4];
 	double *ml = new double[K*4];
-		//Check for correct allocation
-		if (!ml||!me||!ml){ 
-			cout<<"ALLOCATION ERROR"<<endl;
-			exit(1);
-		}
 
 	int Nd[n] = {1,2,10,100}; //#s of throws
 
@@ -109,16 +90,36 @@ int main (int argc, char *argv[]){
 
 	
 	/************************ Exercise 01.3*************************/
-	int xui=10000;
-	double *y = new double[xui];
-	for(int i=0;i<xui;i++){
-		if (i%2==0) y[i] = rnd.Rannyu();
-		else y[i] = rnd.Circ();
+	
+	// Generation of M random values for the cosine of angle theta (in [0, pi/2]), with kind-of-uniform distribution
+	double *cos_theta = new double[M];
+	double *events = new double[M];
+	double l = 0.5; //length of the needle (d=1)
+	
+	for(int i=0;i<M;i++){
+		cos_theta[i] = rnd.Circ();
+		//for the spatial coordinate I use the M values previously generated and stored in r[]
+	double y2 = r[i] + l/2*cos_theta[i];
+	double y1 = r[i] - l/2*cos_theta[i];
+		if(y1<0 || y2<0 || y1>1 || y2>1){
+			events[i] = 1;
+		}
+		else events[i] = 0;
 	}
-
-	printfile(y,xui,"circ.dat");
-
-
+	
+	printfile(cos_theta,10000,"cos.dat");
+	
+	blk.CAvgs(events);
+	blk.CErrs();
+	blk.Output("events.dat");
+	
+	//append the value of l to the events file
+	ofstream outf;
+	outf.open("events.dat",ios_base::app);
+	outf<<l<<"\t nan"<<endl;
+	outf.close();
+	
+	
 	/*********** Final actions **************/
 	
 	delete[] r;
